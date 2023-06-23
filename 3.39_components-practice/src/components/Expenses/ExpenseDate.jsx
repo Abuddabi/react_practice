@@ -1,6 +1,6 @@
 import "./ExpenseDate.css";
 
-function ExpenseDate({ date }) {
+const ExpenseDate = ({ date }) => {
     const formatDate = (options) => date.toLocaleString("en-US", options);
 
     return (
@@ -14,6 +14,6 @@ function ExpenseDate({ date }) {
             </div>
         </div>
     );
-}
+};
 
 export default ExpenseDate;

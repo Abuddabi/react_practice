@@ -1,14 +1,15 @@
 import ExpenseItem from "./ExpenseItem";
+import Card from "../UI/Card";
 import "./Expenses.css";
 
-function Expenses({ expenses }) {
+const Expenses = ({ expenses }) => {
     return (
-        <div className="expenses">
+        <Card className="expenses">
             {expenses.map((expense, index) => (
                 <ExpenseItem expense={expense} key={index} />
             ))}
-        </div>
+        </Card>
     );
-}
+};
 
 export default Expenses;
