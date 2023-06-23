@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import Expenses from "./components/Expenses/Expenses";
 
@@ -32,10 +31,10 @@ const App = () => {
 
     return (
         <>
-            <h2>Let's get started!</h2>
+            <h2>Let&apos;s get started!</h2>
             <Expenses expenses={expenses} />
         </>
     );
-}
+};
 
 export default App;
