@@ -1,12 +1,8 @@
 import { useState } from "react";
 import "./ExpenseForm.css";
 
-const ExpenseForm = () => {
-    const emptyFormData = {
-        title: "",
-        amount: "",
-        date: "",
-    };
+const ExpenseForm = (props) => {
+    const emptyFormData = { title: "", amount: "", date: "" };
     const [formData, setFormData] = useState(emptyFormData);
 
     const formChangeHandler = (e, valueName) => {
@@ -20,10 +16,8 @@ const ExpenseForm = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-
         formData.date = new Date(formData.date);
-        console.log(formData);
-
+        props.onFormSubmit(formData);
         setFormData(emptyFormData);
     };
 
