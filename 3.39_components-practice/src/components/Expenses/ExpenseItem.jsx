@@ -7,14 +7,18 @@ import Card from "../UI/Card";
 const ExpenseItem = ({ expense }) => {
     const { title, amount } = expense;
     const [date, setDate] = useState(expense.date);
+    // console.log(
+    //     expense.date.toISOString().split("T")[0],
+    //     date.toISOString().split("T")[0]
+    // );
 
     const clickHandler = () => {
-        setDate(() => {
-            let dateDay = date.toLocaleString("en-US", { day: "2-digit" });
+        setDate((oldDate) => {
+            let dateDay = oldDate.toLocaleString("en-US", { day: "2-digit" });
             let dateMonth =
-                date.toLocaleString("en-US", { month: "numeric" }) - 1;
+                oldDate.toLocaleString("en-US", { month: "numeric" }) - 1;
 
-            return new Date(date.getFullYear(), dateMonth, ++dateDay);
+            return new Date(oldDate.getFullYear(), dateMonth, ++dateDay);
         });
     };
 
