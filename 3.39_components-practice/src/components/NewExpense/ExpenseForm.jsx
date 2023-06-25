@@ -22,6 +22,7 @@ const ExpenseForm = (props) => {
 
         e.preventDefault();
         formData.date = dateHandler(formData.date);
+        formData.amount = +formData.amount;
         props.onFormSubmit(formData);
         setFormData(emptyFormData);
     };
