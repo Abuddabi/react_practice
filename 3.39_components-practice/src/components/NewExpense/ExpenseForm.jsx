@@ -15,8 +15,13 @@ const ExpenseForm = (props) => {
     };
 
     const submitHandler = (e) => {
+        const dateHandler = (dateString) => {
+            const [year, month, day] = dateString.split("-").map(Number);
+            return new Date(year, month - 1, day);
+        };
+
         e.preventDefault();
-        formData.date = new Date(formData.date);
+        formData.date = dateHandler(formData.date);
         props.onFormSubmit(formData);
         setFormData(emptyFormData);
     };

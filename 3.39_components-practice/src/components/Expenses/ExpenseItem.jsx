@@ -14,9 +14,8 @@ const ExpenseItem = ({ expense }) => {
             let dateMonth =
                 date.toLocaleString("en-US", { month: "numeric" }) - 1;
 
-            return new Date(2020, dateMonth, ++dateDay);
+            return new Date(date.getFullYear(), dateMonth, ++dateDay);
         });
-        console.log(date.toLocaleDateString());
     };
 
     return (
