@@ -3,7 +3,7 @@ import ExpenseItem from "./ExpenseItem";
 
 const ExpensesList = ({ filteredExpenses }) => {
     if (filteredExpenses.length === 0) {
-        return <p>No expenses found</p>;
+        return <h2 className="expenses-list__fallback">No expenses found</h2>;
     }
 
     return (

@@ -14,23 +14,25 @@ const ExpenseItem = ({ expense }) => {
 
     const clickHandler = () => {
         setDate((oldDate) => {
-            let dateDay = oldDate.toLocaleString("en-US", { day: "2-digit" });
-            let dateMonth =
-                oldDate.toLocaleString("en-US", { month: "numeric" }) - 1;
-
-            return new Date(oldDate.getFullYear(), dateMonth, ++dateDay);
+            return new Date(
+                oldDate.getFullYear(),
+                oldDate.getMonth(),
+                oldDate.getDate() + 1
+            );
         });
     };
 
     return (
-        <Card className="expense-item">
-            <ExpenseDate date={date} />
-            <div className="expense-item__description">
-                <h2>{title}</h2>
-                <div className="expense-item__price">${amount}</div>
-            </div>
-            <button onClick={clickHandler}>Change Date</button>
-        </Card>
+        <li>
+            <Card className="expense-item">
+                <ExpenseDate date={date} />
+                <div className="expense-item__description">
+                    <h2>{title}</h2>
+                    <div className="expense-item__price">${amount}</div>
+                </div>
+                <button onClick={clickHandler}>Change Date</button>
+            </Card>
+        </li>
     );
 };
 
