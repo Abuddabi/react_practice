@@ -53,6 +53,10 @@ body {
     text-transform: uppercase;
 }
 
+.form label.invalid {
+    color: red;
+}
+
 .form input {
     width: 100%;
     padding: 0.5rem;
@@ -61,6 +65,11 @@ body {
     background-color: transparent;
     color: #c2e9e0;
     font-size: 1rem;
+}
+
+.form input.invalid {
+    border-color: red;
+    /* background-color: rgb(255, 219, 224); */
 }
 
 .actions {
