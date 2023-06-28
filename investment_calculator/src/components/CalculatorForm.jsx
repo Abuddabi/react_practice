@@ -1,22 +1,19 @@
 import { useState } from "react";
 import CalculatorInput from "./CalculatorInput";
 
+const emptyFormData = {
+    currentSavings: "",
+    yearlySavings: "",
+    expectedInterest: "",
+    duration: "",
+};
+
 const CalculatorForm = (props) => {
-    const emptyFormData = {
-        currentSavings: "",
-        yearlySavings: "",
-        expectedInterest: "",
-        duration: "",
-    };
     const [formData, setFormData] = useState(emptyFormData);
     const [invalidNames, setInvalidNames] = useState([]);
 
     const formChangeHandler = (name, value) => {
-        setFormData((oldFormData) => {
-            const newFormData = { ...oldFormData };
-            newFormData[name] = value;
-            return newFormData;
-        });
+        setFormData((oldFormData) => ({ ...oldFormData, [name]: +value }));
         if (invalidNames.includes(name))
             setInvalidNames((prevState) =>
                 prevState.filter((item) => item !== name)

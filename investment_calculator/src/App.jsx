@@ -21,8 +21,8 @@ const App = () => {
         let investedCapital = totalSavings + yearlySavings;
         const expectedInterest = +userInput["expectedInterest"] / 100;
         const duration = +userInput["duration"];
-        let totalInterest;
-        let prevInterest;
+        let totalInterest = 0;
+        let prevInterest = 0;
 
         for (let i = 0; i < duration; i++) {
             const yearlyInterest = totalSavings * expectedInterest;
