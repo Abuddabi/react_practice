@@ -7,11 +7,16 @@ const swapiURL = "https://swapi.dev/api/";
 function App() {
     const [filmList, setFilmList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const fetchMoviesHandler = () => {
         setIsLoading(true);
+        setError(null);
         fetch(swapiURL + "films/")
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) throw new Error("Something went wrong!");
+                else return response.json();
+            })
             .then((data) => {
                 const transformedMovies = data.results.map((movieData) => ({
                     id: movieData.episode_id,
@@ -21,16 +26,23 @@ function App() {
                 }));
                 setFilmList(transformedMovies);
                 console.log(transformedMovies);
-                setIsLoading(false);
             })
-            .catch((error) => console.error(error));
+            .catch((er) => {
+                console.error(er.message);
+                setError(er.message);
+            });
+
+        setIsLoading(false);
     };
 
     const moviesContent = isLoading ? (
         <p>Loading...</p>
+    ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
     ) : filmList.length > 0 ? (
         <MoviesList movies={filmList} />
     ) : (
+        // if !isLoading && !error && !filmList > 0
         <p>Found no movies.</p>
     );
 
