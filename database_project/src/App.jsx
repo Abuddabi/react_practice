@@ -9,29 +9,23 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchMoviesHandler = () => {
+    const fetchMoviesHandler = async () => {
         setIsLoading(true);
         setError(null);
-        fetch(swapiURL + "films/")
-            .then((response) => {
-                if (!response.ok) throw new Error("Something went wrong!");
-                else return response.json();
-            })
-            .then((data) => {
-                const transformedMovies = data.results.map((movieData) => ({
-                    id: movieData.episode_id,
-                    title: movieData.title,
-                    openingText: movieData.opening_crawl,
-                    releaseDate: movieData.release_date,
-                }));
-                setFilmList(transformedMovies);
-                console.log(transformedMovies);
-            })
-            .catch((er) => {
-                console.error(er.message);
-                setError(er.message);
-            });
-
+        try {
+            const response = await fetch(swapiURL + "films/");
+            if (!response.ok) throw new Error("Something went wrong!");
+            const data = await response.json();
+            const transformedMovies = data.results.map((movieData) => ({
+                id: movieData.episode_id,
+                title: movieData.title,
+                openingText: movieData.opening_crawl,
+                releaseDate: movieData.release_date,
+            }));
+            setFilmList(transformedMovies);
+        } catch (error) {
+            setError(error.message);
+        }
         setIsLoading(false);
     };
 
