@@ -3,10 +3,16 @@ import TaskForm from "./TaskForm";
 import useHttpHandler from "../../hooks/useHttpHandler";
 
 const NewTask = (props) => {
-    const [writeTask, isLoading, error] = useHttpHandler(props.fetchURL, false);
+    const [writeTask, isLoading, error] = useHttpHandler(props.fetchURL);
 
     const enterTaskHandler = (taskText) => {
-        writeTask({ text: taskText }).then((data) => {
+        writeTask({
+            method: "POST",
+            body: JSON.stringify({ text: taskText }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((data) => {
             const generatedId = data.name;
             const createdTask = { id: generatedId, text: taskText };
             props.onTaskAdd(createdTask);
