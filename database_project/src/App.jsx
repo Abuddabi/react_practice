@@ -1,46 +1,33 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Tasks from "./components/Tasks/Tasks";
 import NewTask from "./components/NewTask/NewTask";
+import useHttpHandler from "./hooks/useHttpHandler";
 
-const swapiURL = "https://swapi.dev/api/";
 const firebaseDB_URL =
-    "https://react-practice-1-6bd4d-default-rtdb.firebaseio.com/";
+    "https://react-practice-1-6bd4d-default-rtdb.firebaseio.com/tasks.json";
 
 function App() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [fetchTasks, isLoading, error] = useHttpHandler(firebaseDB_URL);
     const [tasks, setTasks] = useState([]);
 
-    const fetchTasks = async (taskText) => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const response = await fetch(firebaseDB_URL + "tasks.json");
-            if (!response.ok) throw new Error("Request failed!");
-            const data = await response.json();
+    useEffect(() => {
+        fetchTasks().then((data) => {
+            console.log(data);
             const loadedTasks = [];
             for (const taskKey in data) {
                 loadedTasks.push({ id: taskKey, text: data[taskKey].text });
             }
             setTasks(loadedTasks);
-        } catch (err) {
-            setError(err.message || "Something went wrong!");
-        }
-        setIsLoading(false);
-    };
+        });
+    }, [fetchTasks]);
 
-    useEffect(() => {
-        fetchTasks();
-    }, []);
-
-    const taskAddHandler = (task) => {
+    const taskAddHandler = (task) =>
         setTasks((prevTasks) => prevTasks.concat(task));
-    };
 
     return (
         <>
-            <NewTask onAddTask={taskAddHandler} />
+            <NewTask onTaskAdd={taskAddHandler} fetchURL={firebaseDB_URL} />
             <Tasks
                 items={tasks}
                 loading={isLoading}
