@@ -1,4 +1,3 @@
-import { useState } from "react";
 import useInput from "../hooks/use-input";
 
 const SimpleInput = () => {
@@ -12,33 +11,29 @@ const SimpleInput = () => {
         resetNameInput,
     ] = useInput(nameValidationFunc);
 
-    const [enteredEmail, setEnteredEmail] = useState("");
-    const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
+    const emailValidationFunc = (emailValue) => emailValue.includes("@");
+    const [
+        enteredEmail,
+        enteredEmailIsValid,
+        emailHasError,
+        emailChangeHandler,
+        emailBlurHandler,
+        resetEmailInput,
+    ] = useInput(emailValidationFunc);
 
-    const enteredEmailIsValid =
-        enteredEmailTouched && enteredEmail.includes("@");
     const formIsValid = enteredNameIsValid && enteredEmailIsValid;
-
-    const emailInputChangeHandler = (e) => setEnteredEmail(e.target.value);
-    const emailInputBlurHandler = () => setEnteredEmailTouched(true);
 
     const formSubmissionHandler = (event) => {
         event.preventDefault();
         if (!enteredNameIsValid || !enteredEmailIsValid) return;
         console.log(enteredName, enteredEmail);
-        resetForm();
-    };
-
-    const resetForm = () => {
         resetNameInput();
-        setEnteredEmailTouched(false);
-        setEnteredEmail("");
+        resetEmailInput();
     };
 
     const inputNameClasses = "form-control" + (nameHasError ? " invalid" : "");
     const inputEmailClasses =
-        "form-control" +
-        (enteredEmailTouched && !enteredEmailIsValid ? " invalid" : "");
+        "form-control" + (emailHasError ? " invalid" : "");
 
     return (
         <form onSubmit={formSubmissionHandler}>
@@ -61,10 +56,10 @@ const SimpleInput = () => {
                     value={enteredEmail}
                     type="email"
                     id="email"
-                    onChange={emailInputChangeHandler}
-                    onBlur={emailInputBlurHandler}
+                    onChange={emailChangeHandler}
+                    onBlur={emailBlurHandler}
                 />
-                {enteredEmailTouched && !enteredEmailIsValid && (
+                {emailHasError && (
                     <p className="error-text">
                         Email should include <i>@</i> symbol.
                     </p>
