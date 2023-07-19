@@ -28,6 +28,13 @@ const Cart = (props) => {
     const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
     const hasItems = cartCtx.items.length > 0;
 
+    const orderHandler = () => {
+        props.onOrder({
+            items: cartCtx.items,
+            totalAmount: +cartCtx.totalAmount.toFixed(2),
+        });
+    };
+
     return (
         <Modal onClose={props.onClose}>
             {cartItems}
@@ -42,7 +49,11 @@ const Cart = (props) => {
                 >
                     Close
                 </button>
-                {hasItems && <button className={classes.button}>Order</button>}
+                {hasItems && (
+                    <button onClick={orderHandler} className={classes.button}>
+                        Order
+                    </button>
+                )}
             </div>
         </Modal>
     );

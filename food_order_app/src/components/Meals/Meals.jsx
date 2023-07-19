@@ -1,11 +1,11 @@
 import AvailableMeals from "./AvailableMeals";
 import MealsSummary from "./MealsSummary";
 
-const Meals = () => {
+const Meals = (props) => {
     return (
         <>
             <MealsSummary />
-            <AvailableMeals />
+            <AvailableMeals fetchMeals={props.fetchMeals} />
         </>
     );
 };
