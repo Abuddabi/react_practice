@@ -28,27 +28,32 @@ const Checkout = (props) => {
 
         const enteredNameIsValid = !isEmpty(enteredName);
         const enteredStreetIsValid = !isEmpty(enteredStreet);
-        const enteredCityIsValid = !isEmpty(enteredCity);
         const enteredPostalCodeIsValid = isFiveChars(enteredPostalCode);
+        const enteredCityIsValid = !isEmpty(enteredCity);
 
         setFormInputsValidity({
             name: enteredNameIsValid,
             street: enteredStreetIsValid,
-            city: enteredCityIsValid,
             postalCode: enteredPostalCodeIsValid,
+            city: enteredCityIsValid,
         });
 
         const formIsValid =
             enteredNameIsValid &&
             enteredStreetIsValid &&
-            enteredCityIsValid &&
-            enteredPostalCodeIsValid;
+            enteredPostalCodeIsValid &&
+            enteredCityIsValid;
 
         if (!formIsValid) {
             return;
         }
 
-        // Submit cart data
+        props.onSubmit({
+            name: enteredName,
+            street: enteredStreet,
+            postalCode: enteredPostalCode,
+            city: enteredCity,
+        });
     };
 
     const nameControlClasses = `${classes.control} ${

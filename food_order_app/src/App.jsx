@@ -19,8 +19,8 @@ const App = () => {
         setActiveCart(false);
     };
 
-    const orderHandler = (orderData) => {
-        fetch(firebaseDB_URL + "orders.json", {
+    const submitOrderHandler = (orderData) => {
+        return fetch(firebaseDB_URL + "orders.json", {
             method: "POST",
             body: JSON.stringify(orderData),
             headers: {
@@ -28,7 +28,7 @@ const App = () => {
             },
         })
             .then((response) => response.json())
-            .then((data) => console.log(data))
+            .then((data) => data) // return
             .catch((err) => {
                 console.error(err.message);
             });
@@ -47,7 +47,10 @@ const App = () => {
     return (
         <CartProvider>
             {activeCart && (
-                <Cart onClose={hideCartHandler} onOrder={orderHandler} />
+                <Cart
+                    onClose={hideCartHandler}
+                    onSubmitOrder={submitOrderHandler}
+                />
             )}
             <Header onOpenCartClick={showCartHandler} />
             <main>
