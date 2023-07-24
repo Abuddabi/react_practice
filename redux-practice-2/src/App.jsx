@@ -20,7 +20,7 @@ const PRODUCTS_DATA = [
 ];
 
 function App() {
-    const showCart = useSelector((state) => state.cart.showCart);
+    const showCart = useSelector((state) => state.ui.showCart);
 
     return (
         <Layout>
