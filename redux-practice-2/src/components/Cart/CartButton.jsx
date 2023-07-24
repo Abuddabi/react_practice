@@ -4,7 +4,7 @@ import classes from "./CartButton.module.css";
 
 const CartButton = () => {
     const dispatch = useDispatch();
-    const cartCount = useSelector((state) => state.cart.items.length);
+    const cartCount = useSelector((state) => state.cart.totalAmount);
 
     const clickHandler = () => {
         dispatch(uiActions.toggleCart());

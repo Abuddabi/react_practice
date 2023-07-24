@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialCartState = {
-    items: []
-};
-
 const cartSlice = createSlice({
     name: 'cart',
-    initialState: initialCartState,
+    initialState: {
+        items: [],
+        totalAmount: 0,
+        totalPrice: 0
+    },
     reducers: {
         add(state, action) {
             const { id, title, price } = action.payload;
@@ -15,47 +15,39 @@ const cartSlice = createSlice({
             if (foundProduct) {
                 foundProduct.quantity++;
                 foundProduct.total += foundProduct.price;
-                const updatedProducts = state.items.map(product =>
-                    product.id === foundProduct.id ? foundProduct : product
-                );
-                state.items = updatedProducts;
+                state.totalPrice += foundProduct.price;
             } else {
-                state.items = [
-                    ...state.items,
-                    {
-                        id,
-                        title,
-                        price,
-                        quantity: 1,
-                        total: price,
-                    }]
+                state.items.push({
+                    id,
+                    title,
+                    price,
+                    quantity: 1,
+                    total: price,
+                });
+                state.totalPrice += price;
             }
+            state.totalAmount++;
         },
         increase(state, action) {
             const id = action.payload;
             const foundProduct = state.items.find(product => product.id === id);
             foundProduct.quantity++;
             foundProduct.total += foundProduct.price;
-            const updatedProducts = state.items.map(product =>
-                product.id === foundProduct.id ? foundProduct : product
-            );
-            state.items = updatedProducts;
+            state.totalPrice += foundProduct.price;
+            state.totalAmount++;
         },
         decrease(state, action) {
             const id = action.payload;
             const foundProduct = state.items.find(product => product.id === id);
-            let updatedProducts = [];
             if (foundProduct.quantity > 1) {
                 foundProduct.quantity--;
                 foundProduct.total -= foundProduct.price;
-                updatedProducts = state.items.map(product =>
-                    product.id === foundProduct.id ? foundProduct : product
-                );
             } else {
-                updatedProducts = state.items.filter((product) => product.id !== id);
+                state.items = state.items.filter((product) => product.id !== id);
             }
 
-            state.items = updatedProducts;
+            state.totalAmount--;
+            state.totalPrice -= foundProduct.price;
         },
     }
 });

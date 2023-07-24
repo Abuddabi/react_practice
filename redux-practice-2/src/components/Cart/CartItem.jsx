@@ -11,7 +11,9 @@ const CartItem = ({ item }) => {
         dispatch(cartActions.decrease(id));
     };
 
-    const increaseHandler = () => {};
+    const increaseHandler = () => {
+        dispatch(cartActions.increase(id));
+    };
 
     return (
         <li className={classes.item}>
