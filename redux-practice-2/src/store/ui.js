@@ -15,6 +15,9 @@ const uiSlice = createSlice({
         showNotification(state, action) {
             const { status, title, message } = action.payload;
             state.notification = { status, title, message };
+        },
+        clearNotification(state) {
+            state.notification = null
         }
     }
 });
