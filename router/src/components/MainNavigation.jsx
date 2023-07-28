@@ -14,7 +14,7 @@ const MainNavigation = () => {
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/products" className={isActive}>
+                        <NavLink to="products" className={isActive}>
                             Products
                         </NavLink>
                     </li>
