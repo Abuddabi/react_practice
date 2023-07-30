@@ -17,7 +17,7 @@ const navLinks = [
         label: "Newsletter"
     },
     {
-        to: "/auth",
+        to: "/auth?mode=login",
         label: "Authentication"
     },
 ];
