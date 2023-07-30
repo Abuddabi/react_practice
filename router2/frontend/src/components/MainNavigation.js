@@ -3,42 +3,41 @@ import { NavLink } from 'react-router-dom';
 import classes from './MainNavigation.module.css';
 import NewsletterSignup from './NewsletterSignup';
 
+const navLinks = [
+    {
+        to: "/",
+        label: "Home"
+    },
+    {
+        to: "/events",
+        label: "Events"
+    },
+    {
+        to: "/newsletter",
+        label: "Newsletter"
+    },
+    {
+        to: "/auth",
+        label: "Authentication"
+    },
+];
+
 function MainNavigation() {
+    const isActive = ({ isActive }) => isActive ? classes.active : undefined;
+
     return (
         <header className={classes.header}>
             <nav>
                 <ul className={classes.list}>
-                    <li>
+                    {navLinks.map(nav => <li key={nav.label}>
                         <NavLink
-                            to="/"
-                            className={({ isActive }) =>
-                                isActive ? classes.active : undefined
-                            }
+                            to={nav.to}
+                            className={isActive}
                             end
                         >
-                            Home
+                            {nav.label}
                         </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/events"
-                            className={({ isActive }) =>
-                                isActive ? classes.active : undefined
-                            }
-                        >
-                            Events
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/newsletter"
-                            className={({ isActive }) =>
-                                isActive ? classes.active : undefined
-                            }
-                        >
-                            Newsletter
-                        </NavLink>
-                    </li>
+                    </li>)}
                 </ul>
             </nav>
             <NewsletterSignup />
