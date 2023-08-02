@@ -1,48 +1,39 @@
 import MeetupDetail from '../../components/meetups/MeetupDetail';
+import meetups from '../../utils/mongodb';
 
-function MeetupDetails() {
+function MeetupDetails({ meetupData }) {
     return (
         <MeetupDetail
-            image='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/1280px-Stadtbild_M%C3%BCnchen.jpg'
-            title='First Meetup'
-            address='Some Street 5, Some City'
-            description='This is a first meetup'
+            {...meetupData}
         />
     );
 }
 
 export async function getStaticPaths() {
+    const meetupsIds = await meetups.getIds();
+
     return {
         fallback: false,
-        paths: [
-            {
-                params: {
-                    meetupId: 'm1'
-                }
-            },
-            {
-                params: {
-                    meetupId: 'm2'
-                }
-            }
-        ]
+        paths: meetupsIds.map(meetup => ({
+            params: { meetupId: meetup._id.toString() }
+        }))
     };
 }
 
 export async function getStaticProps(context) {
-    // fetch data for a single meetup
     const meetupId = context.params.meetupId;
+    const selectedMeetup = await meetups.getOneById(meetupId);
+    const id = selectedMeetup._id.toString();
 
     return {
         props: {
             meetupData: {
-                id: meetupId,
-                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/1280px-Stadtbild_M%C3%BCnchen.jpg',
-                title: 'First Meetup',
-                address: 'Some Street 5, Some City',
-                description: 'This is a first meetup',
+                ...selectedMeetup,
+                id: id,
+                _id: id,
             }
-        }
+        },
+        revalidate: 1
     };
 }
 
