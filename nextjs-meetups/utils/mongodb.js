@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
 async function getClient() {
-    const client = await MongoClient.connect('mongodb+srv://f0r9ame123:Aa123!!!@cluster0.n239amc.mongodb.net/meetups');
+    const client = await MongoClient.connect(process.env.MONGODB_URL_STRING + '/meetups');
     return client;
 }
 
@@ -11,7 +11,7 @@ async function getCollection(client) {
     return meetupsCollection;
 }
 
-async function fetchData(callback = null) {
+async function fetchData(callback) {
     const client = await getClient();
     const meetupsCollection = await getCollection(client);
 
@@ -23,22 +23,22 @@ async function fetchData(callback = null) {
 }
 
 async function insertOne(data) {
-    const result = await fetchData(async (meetupsCollection) => await meetupsCollection.insertOne(data));
-    console.log(result);
+    const result = await fetchData(async (collection) => await collection.insertOne(data));
+    return result;
 }
 
 async function getAll() {
-    const allMeetups = await fetchData(async (meetupsCollection) => await meetupsCollection.find().toArray());
+    const allMeetups = await fetchData(async (collection) => await collection.find().toArray());
     return allMeetups;
 }
 
 async function getIds() {
-    const ids = await fetchData(async (meetupsCollection) => await meetupsCollection.find({}, { projection: { _id: 1 } }).toArray());
+    const ids = await fetchData(async (collection) => await collection.find({}, { projection: { _id: 1 } }).toArray());
     return ids;
 }
 
 async function getOneById(id) {
-    const selectedMeetup = await fetchData(async (meetupsCollection) => await meetupsCollection.findOne({ _id: new ObjectId(id) }));
+    const selectedMeetup = await fetchData(async (collection) => await collection.findOne({ _id: new ObjectId(id) }));
     return selectedMeetup;
 }
 
