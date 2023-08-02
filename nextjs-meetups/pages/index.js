@@ -11,6 +11,7 @@ function HomePage(props) {
         <MeetupList meetups={props.meetups} />
     </>;
 }
+//deploy
 
 export async function getStaticProps() {
     const loadedMeetups = await meetups.getAll();
