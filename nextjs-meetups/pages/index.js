@@ -1,8 +1,15 @@
 import meetups from '../utils/mongodb';
+import { meta } from '../utils/helper';
 import MeetupList from '../components/meetups/MeetupList';
 
+const title = 'React Meetups';
+const description = 'Browse a huge list of highly active React meetups!';
+
 function HomePage(props) {
-    return <MeetupList meetups={props.meetups} />;
+    return <>
+        {meta(title, description)}
+        <MeetupList meetups={props.meetups} />
+    </>;
 }
 
 export async function getStaticProps() {
