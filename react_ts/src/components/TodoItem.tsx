@@ -1,12 +1,11 @@
 import classes from "./TodoItem.module.css";
 
 const TodoItem: React.FC<{
-    id: number;
     text: string;
-    onClick: (id: number) => void;
+    onClick: () => void;
 }> = (props) => {
     return (
-        <li onClick={() => props.onClick(props.id)} className={classes.item}>
+        <li onClick={props.onClick} className={classes.item}>
             {props.text}
         </li>
     );

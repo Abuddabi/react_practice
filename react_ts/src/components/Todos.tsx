@@ -10,9 +10,8 @@ const Todos: React.FC<{ items: Todo[]; onDelete: (id: number) => void }> = (
             {props.items.map((item) => (
                 <TodoItem
                     key={item.id}
-                    id={item.id}
                     text={item.text}
-                    onClick={props.onDelete}
+                    onClick={props.onDelete.bind(null, item.id)}
                 />
             ))}
         </ul>
