@@ -13,10 +13,16 @@ function App() {
         });
     };
 
+    const removeTodoHandler = (id: number) => {
+        setTodos((prevState) => {
+            return [...prevState.filter((item) => item.id !== id)];
+        });
+    };
+
     return (
         <>
             <NewTodo onAddTodo={addTodoHandler} />
-            <Todos items={todos} />
+            <Todos onDelete={removeTodoHandler} items={todos} />
         </>
     );
 }
