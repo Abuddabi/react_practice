@@ -1,8 +1,6 @@
-import React from "react";
-
 import Ingredients from "./components/Ingredients/Ingredients";
 
-const App = (props) => {
+const App = () => {
     return <Ingredients />;
 };
 
