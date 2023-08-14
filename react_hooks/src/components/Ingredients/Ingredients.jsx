@@ -70,7 +70,7 @@ const Ingredients = () => {
         console.log("RENDERING INGREDIENTS", ingredients);
     }, [ingredients]);
 
-    const addIngredientHandler = (ingredient) => {
+    const addIngredientHandler = useCallback((ingredient) => {
         dispatchHttp({ type: "SEND" });
         fetch(firebaseDB_URL + "ingredients.json", {
             method: "POST",
@@ -90,7 +90,7 @@ const Ingredients = () => {
             .catch((err) => {
                 dispatchHttp({ type: "ERROR", error: err.message });
             });
-    };
+    }, []);
 
     const filterHandler = useCallback(
         (filterValue) => {
@@ -116,7 +116,7 @@ const Ingredients = () => {
         [ingredients]
     );
 
-    const removeItemHandler = (id) => {
+    const removeItemHandler = useCallback((id) => {
         dispatchHttp({ type: "SEND" });
         fetch(firebaseDB_URL + `ingredients/${id}.json`, {
             method: "DELETE",
@@ -128,16 +128,17 @@ const Ingredients = () => {
             .catch((err) => {
                 dispatchHttp({ type: "ERROR", error: err.message });
             });
-    };
+    }, []);
+
+    const clearError = useCallback(
+        () => dispatchHttp({ type: "ERROR", error: null }),
+        []
+    );
 
     return (
         <div className="App">
             {httpState.error && (
-                <ErrorModal
-                    onClose={() => dispatchHttp({ type: "ERROR", error: null })}
-                >
-                    {httpState.error}
-                </ErrorModal>
+                <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>
             )}
 
             <IngredientForm
