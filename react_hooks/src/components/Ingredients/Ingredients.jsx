@@ -3,6 +3,7 @@ import IngredientForm from "./IngredientForm";
 import IngredientList from "./IngredientList";
 import ErrorModal from "../UI/ErrorModal";
 import Search from "./Search";
+import useHttp from "../../hooks/http";
 
 const firebaseDB_URL =
     "https://react-practice-1-6bd4d-default-rtdb.firebaseio.com/";
@@ -23,74 +24,58 @@ const ingredientsReducer = (state, action) => {
     }
 };
 
-const httpReducer = (state, action) => {
-    switch (action.type) {
-        case "SEND":
-            return { ...state, isLoading: true };
-        case "RESPONSE":
-            return { ...state, isLoading: false };
-        case "ERROR":
-            return { ...state, isLoading: false, error: action.error };
-        default:
-            throw new Error("No action type!");
-    }
-};
-
 const Ingredients = () => {
     const [ingredients, dispatch] = useReducer(ingredientsReducer, null);
-    const [httpState, dispatchHttp] = useReducer(httpReducer, {
-        isLoading: false,
-        error: null,
-    });
+    const {
+        isLoading,
+        error,
+        data,
+        extra: httpExtra,
+        sendRequest,
+        clear: clearError,
+    } = useHttp();
 
     useEffect(() => {
-        dispatchHttp({ type: "SEND" });
-        fetch(firebaseDB_URL + "ingredients.json")
-            .then((response) => response.json())
-            .then((result) => {
-                dispatchHttp({ type: "RESPONSE" });
-                for (const [id, item] of Object.entries(result)) {
-                    loadedIngredients.push({
-                        id,
-                        ...item,
-                    });
-                }
+        sendRequest(firebaseDB_URL + "ingredients.json", "GET", null, {
+            type: "SET",
+        });
+    }, [sendRequest]);
 
-                dispatch({
-                    type: "SET",
-                    ingredients: loadedIngredients,
+    useEffect(() => {
+        if (isLoading || error || !httpExtra) return;
+
+        let dispatchObj = {};
+        if (httpExtra.type === "SET") {
+            for (const [id, item] of Object.entries(data)) {
+                loadedIngredients.push({
+                    id,
+                    ...item,
                 });
-            })
-            .catch((err) => {
-                dispatchHttp({ type: "ERROR", error: err.message });
-            });
-    }, []);
+            }
+            dispatchObj.ingredients = loadedIngredients;
+        } else if (httpExtra.type === "ADD")
+            dispatchObj.ingredient = { id: data.name, ...httpExtra.data };
+        else if (httpExtra.type === "DELETE") dispatchObj.id = httpExtra.data;
+        dispatchObj.type = httpExtra.type;
+
+        dispatch(dispatchObj);
+    }, [data, isLoading, error, httpExtra]);
 
     useEffect(() => {
         console.log("RENDERING INGREDIENTS", ingredients);
     }, [ingredients]);
 
-    const addIngredientHandler = useCallback((ingredient) => {
-        dispatchHttp({ type: "SEND" });
-        fetch(firebaseDB_URL + "ingredients.json", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ingredient),
-        })
-            .then((response) => response.json())
-            .then((result) => {
-                dispatchHttp({ type: "RESPONSE" });
-                dispatch({
-                    type: "ADD",
-                    ingredient: { id: result.name, ...ingredient },
-                });
-            })
-            .catch((err) => {
-                dispatchHttp({ type: "ERROR", error: err.message });
-            });
-    }, []);
+    const addIngredientHandler = useCallback(
+        (ingredient) => {
+            sendRequest(
+                firebaseDB_URL + "ingredients.json",
+                "POST",
+                JSON.stringify(ingredient),
+                { type: "ADD", data: ingredient }
+            );
+        },
+        [sendRequest]
+    );
 
     const filterHandler = useCallback(
         (filterValue) => {
@@ -116,34 +101,25 @@ const Ingredients = () => {
         [ingredients]
     );
 
-    const removeItemHandler = useCallback((id) => {
-        dispatchHttp({ type: "SEND" });
-        fetch(firebaseDB_URL + `ingredients/${id}.json`, {
-            method: "DELETE",
-        })
-            .then(() => {
-                dispatchHttp({ type: "RESPONSE" });
-                dispatch({ type: "DELETE", id });
-            })
-            .catch((err) => {
-                dispatchHttp({ type: "ERROR", error: err.message });
-            });
-    }, []);
-
-    const clearError = useCallback(
-        () => dispatchHttp({ type: "ERROR", error: null }),
-        []
+    const removeItemHandler = useCallback(
+        (id) => {
+            const url = firebaseDB_URL + `ingredients/${id}.json`;
+            sendRequest(url, "DELETE", null, { type: "DELETE", data: id });
+        },
+        [sendRequest]
     );
 
     return (
         <div className="App">
-            {httpState.error && (
-                <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>
+            {error && (
+                <ErrorModal onClose={clearError}>
+                    <span dangerouslySetInnerHTML={{ __html: error }}></span>
+                </ErrorModal>
             )}
 
             <IngredientForm
                 onAddIngredient={addIngredientHandler}
-                loading={httpState.isLoading}
+                loading={isLoading}
             />
 
             <section>
