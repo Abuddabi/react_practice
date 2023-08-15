@@ -1,28 +1,59 @@
-import { useState } from "react";
 import NewPost from "./NewPost";
 import Post from "./Post";
+import Modal from "./Modal";
 import classes from "./PostList.module.css";
+import { useState } from "react";
 
-const PostList = () => {
-    const [enteredBody, setEnteredBody] = useState("");
-    const [enteredAuthor, setEnteredAuthor] = useState("");
+const PostList = (props) => {
+    const [posts, setPosts] = useState([
+        // {
+        //     body: "React.js is good!",
+        //     author: "Yegor",
+        // },
+        // {
+        //     body: "Test text",
+        //     author: "Test",
+        // },
+    ]);
 
-    const bodyChangeHandler = (e) => setEnteredBody(e.target.value);
-    const authorChangeHandler = (e) => setEnteredAuthor(e.target.value);
+    const addPostHandler = (post) => {
+        setPosts((prev) => [...prev, post]);
+    };
+
+    const deletePostHandler = (id) => {
+        setPosts((prev) => prev.filter((post) => post.body !== id));
+    };
+
+    const postsContent =
+        posts.length > 0 ? (
+            <ul className={classes.posts}>
+                {posts.map((post) => (
+                    <Post
+                        onClick={deletePostHandler.bind(null, post.body)}
+                        key={post.body}
+                        name={post.author}
+                        text={post.body}
+                    />
+                ))}
+            </ul>
+        ) : (
+            <div style={{ textAlign: "center", color: "white" }}>
+                <h2>There are no posts yet.</h2>
+                <p>Start adding some!</p>
+            </div>
+        );
 
     return (
         <>
-            <NewPost
-                onBodyChange={bodyChangeHandler}
-                onAuthorChange={authorChangeHandler}
-            />
-            <ul className={classes.posts}>
-                <Post
-                    name={enteredAuthor || "Yegor"}
-                    text={enteredBody || "React.js is good!"}
-                />
-                <Post name="Test" text="Test text" />
-            </ul>
+            {props.isPosting && (
+                <Modal onClose={props.onStopPosting}>
+                    <NewPost
+                        onAddPost={addPostHandler}
+                        onCloseModal={props.onStopPosting}
+                    />
+                </Modal>
+            )}
+            {postsContent}
         </>
     );
 };
